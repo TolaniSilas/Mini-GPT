@@ -14,7 +14,8 @@ def train_epoch(model, dataloader, optimizer, criterion, device):
     num_batches = 0
 
     for batch_idx, (inputs, targets) in enumerate(dataloader):
-        # move data to device.
+
+        # move data to device (device - gpu or cpu).
         inputs = inputs.to(device)
         targets = targets.to(device)
 
@@ -50,7 +51,8 @@ def validate(model, dataloader, criterion, device):
 
     with torch.no_grad():
         for inputs, targets in dataloader:
-            # move data to device.
+
+            # move data to device (device - gpu or cpu).
             inputs = inputs.to(device)
             targets = targets.to(device)
 
@@ -98,7 +100,7 @@ def main():
         print("failed to load vocabulary")
         return
 
-    # initialize model (assuming GPT2Model exists).
+    # initialize model.
     from src.utils.config import GPT2_SMALL
     # from src.models.gpt2 import GPT2Model
 

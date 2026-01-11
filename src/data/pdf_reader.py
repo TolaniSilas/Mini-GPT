@@ -1,5 +1,6 @@
 import os
-import PyPDF2
+from pypdf import PdfReader
+
 
 
 def pdf_to_text(pdf_path, output_txt_path=None, save_to_file=True):
@@ -15,13 +16,12 @@ def pdf_to_text(pdf_path, output_txt_path=None, save_to_file=True):
         with open(pdf_path, 'rb') as file:
 
             # create pdf reader.
-            reader = PyPDF2.PdfReader(file)
+            reader = PdfReader(file)
             num_pages = len(reader.pages)
             print(f"processing {num_pages} pages...")
 
             # extract all text.
             full_text = []
-
             for page_num in range(num_pages):
                 page = reader.pages[page_num]
                 text = page.extract_text()
@@ -51,6 +51,7 @@ def pdf_to_text(pdf_path, output_txt_path=None, save_to_file=True):
         return None
 
 
+
 def batch_pdf_to_text(folder_path, output_folder=None):
     """converts all pdfs in a folder to text files."""
 
@@ -78,6 +79,7 @@ def batch_pdf_to_text(folder_path, output_folder=None):
 
         if output_folder:
             output_path = os.path.join(output_folder, pdf_file.replace('.pdf', '.txt'))
+
         else:
             output_path = None
 

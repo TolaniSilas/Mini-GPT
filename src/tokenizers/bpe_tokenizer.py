@@ -10,7 +10,7 @@ class BPETokenizer:
         # load tiktoken encoder for the specified model.
         self.tokenizer = tiktoken.get_encoding(model_name)
 
-        # store vocab size.
+        # obtain and store the tokenizer's vocab size.
         self.vocab_size = self.tokenizer.n_vocab
 
     def encode(self, text, allowed_special=None):

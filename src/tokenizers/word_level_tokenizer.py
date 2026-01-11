@@ -26,7 +26,7 @@ class WordTokenizer:
         # convert tokens to ids.
         ids = [self.tok_to_int[tok] for tok in preprocessed]
 
-        # return ids
+        # return ids.
         return ids
 
 

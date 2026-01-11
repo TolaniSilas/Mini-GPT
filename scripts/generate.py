@@ -44,11 +44,11 @@ def generate_text(model, tokenizer, prompt, max_tokens=100, temperature=1.0, dev
 def main():
     """main generation script."""
 
-    parser = argparse.ArgumentParser(description="generate text with gpt-2 model")
+    parser = argparse.ArgumentParser(description="generate text with custom akin gpt-2 model trained on outliers' book")
 
     parser.add_argument("--checkpoint", type=str, required=True, help="path to model checkpoint")
     parser.add_argument("--vocab_path", type=str, default="data/vocab/vocab.json", help="path to vocabulary")
-    parser.add_argument("--prompt", type=str, default="The meaning of life is", help="prompt for generation")
+    parser.add_argument("--prompt", type=str, default="who is the author of the outliers book?", help="prompt for generation")
     parser.add_argument("--max_tokens", type=int, default=100, help="maximum tokens to generate")
     parser.add_argument("--temperature", type=float, default=1.0, help="sampling temperature")
     parser.add_argument("--device", type=str, default="cuda" if torch.cuda.is_available() else "cpu", help="device")
@@ -68,8 +68,9 @@ def main():
         return
 
     # initialize tokenizer.
-    from src.tokenizers.word_tokenizer import WordTokenizer
-    tokenizer = WordTokenizer(vocab)
+    from src.tokenizers import BPETokenizer
+    # tokenizer = WordTokenizer(vocab)
+    tokenizer = BPETokenizer()
 
     # load model (assuming GPT2Model exists).
     from src.utils.config import GPT2_SMALL

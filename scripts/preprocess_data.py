@@ -2,6 +2,7 @@ import os
 import re
 import argparse
 from pathlib import Path
+from src.data import pdf_to_text, batch_pdf_to_text
 
 
 def preprocess_text(text):
@@ -20,12 +21,10 @@ def process_pdf_to_text(pdf_path, output_path):
     """converts pdf to preprocessed text file."""
 
     try:
-        # import pdf reader (assuming it exists in src.data).
-        from src.data.pdf_reader import pdf_to_text
 
         # extract text from pdf.
         print(f"processing: {pdf_path}")
-        raw_text = pdf_to_text(pdf_path, save_to_file=False)
+        raw_text = batch_pdf_to_text(pdf_path, save_to_file=False)
 
         if raw_text:
             # preprocess text.
@@ -84,7 +83,7 @@ def build_vocabulary(text_files, min_freq=2, special_tokens=None):
 def main():
     """main preprocessing pipeline."""
 
-    parser = argparse.ArgumentParser(description="preprocess data for gpt-2 training")
+    parser = argparse.ArgumentParser(description="preprocess pdf data for gpt-2 training.")
 
     parser.add_argument("--raw_dir", type=str, default="data/raw", help="directory with raw pdfs")
     parser.add_argument("--output_dir", type=str, default="data/processed", help="output directory for processed text")

@@ -1,19 +1,19 @@
-# dataset.py
-
-import torch
-from torch.utils.data import Dataset, DataLoader
 import os
 from pathlib import Path
+from src.tokenizers import BPETokenizer
+import torch
+from torch.utils.data import Dataset, DataLoader
 
 
 class TextDataset(Dataset):
-    """pytorch dataset for tokenized text data."""
+    """pytorch custom dataset for tokenized text data."""
 
-    def __init__(self, data_path, tokenizer, context_length=256, stride=128):
+    def __init__(self, data_path, tokenizer, context_length=256, max_length=200, stride=128):
         """initializes dataset with text files and tokenizer."""
 
         self.tokenizer = tokenizer
         self.context_length = context_length
+        self.max_length = max_length
         self.stride = stride
 
         # load all text files.
@@ -31,11 +31,15 @@ class TextDataset(Dataset):
         text_files = []
 
         if os.path.isfile(data_path):
+
             # single file.
             text_files.append(data_path)
+
         elif os.path.isdir(data_path):
+
             # directory of files.
             text_files = list(Path(data_path).glob("*.txt"))
+
         else:
             raise ValueError(f"invalid data path: {data_path}")
 
@@ -53,11 +57,12 @@ class TextDataset(Dataset):
             with open(text_file, 'r', encoding='utf-8') as f:
                 text = f.read()
 
-            # tokenize text.
+            # tokenize the entire text (document).
             token_ids = self.tokenizer.encode(text)
 
-            # create sliding window chunks.
+            # create a sliding window to chunk the text (document) into overlapping sequences of context length.
             for i in range(0, len(token_ids) - self.context_length, self.stride):
+
                 # input is current chunk.
                 input_chunk = token_ids[i:i + self.context_length]
 
@@ -79,56 +84,50 @@ class TextDataset(Dataset):
     def __getitem__(self, idx):
         """returns input and target tensors for given index."""
 
-        # convert to tensors.
+        # convert to tensors with long data type.
         input_tensor = torch.tensor(self.input_ids[idx], dtype=torch.long)
         target_tensor = torch.tensor(self.target_ids[idx], dtype=torch.long)
 
         return input_tensor, target_tensor
 
 
-def create_dataloader(dataset, batch_size=8, shuffle=True, num_workers=0):
-    """creates pytorch dataloader from dataset."""
+
+def create_dataloader(dataset, batch_size=8, shuffle=True, drop_last=True, num_workers=0):
+    """creates pytorch dataloader from the custom dataset."""
 
     dataloader = DataLoader(
         dataset,
         batch_size=batch_size,
         shuffle=shuffle,
+        drop_last=drop_last,
         num_workers=num_workers,
-        pin_memory=True
+        pin_memory=True,
     )
 
     return dataloader
 
 
-# example usage.
 if __name__ == "__main__":
-    # example of how to use the dataset.
-    from src.tokenizers.word_tokenizer import WordTokenizer
-    from src.utils.helpers import load_vocab
+  
+    # initialize tokenizer.
+    tokenizer = BPETokenizer("gpt2")
 
-    # load vocabulary.
-    vocab = load_vocab("data/vocab/vocab.json")
+    # create dataset.
+    dataset = TextDataset(
+        data_path="data/processed",
+        tokenizer=tokenizer,
+        context_length=256,
+        stride=128
+    )
 
-    if vocab:
-        # initialize tokenizer.
-        tokenizer = WordTokenizer(vocab)
+    # create dataloader.
+    dataloader = create_dataloader(dataset, batch_size=8, shuffle=True)
 
-        # create dataset.
-        dataset = TextDataset(
-            data_path="data/processed",
-            tokenizer=tokenizer,
-            context_length=256,
-            stride=128
-        )
+    # running iteration for text.
+    for batch_idx, (inputs, targets) in enumerate(dataloader):
+        print(f"batch {batch_idx + 1}:")
+        print(f"  input shape: {inputs.shape}")
+        print(f"  target shape: {targets.shape}")
 
-        # create dataloader.
-        dataloader = create_dataloader(dataset, batch_size=8, shuffle=True)
-
-        # test iteration.
-        for batch_idx, (inputs, targets) in enumerate(dataloader):
-            print(f"batch {batch_idx + 1}:")
-            print(f"  input shape: {inputs.shape}")
-            print(f"  target shape: {targets.shape}")
-
-            if batch_idx >= 2:
-                break
+        if batch_idx >= 2:
+            break
