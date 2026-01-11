@@ -5,7 +5,7 @@ import torch
 from torch.utils.data import Dataset, DataLoader
 
 
-class TextDataset(Dataset):
+class GPTTextDataset(Dataset):
     """pytorch custom dataset for tokenized text data."""
 
     def __init__(self, data_path, tokenizer, context_length=256, max_length=200, stride=128):
@@ -110,10 +110,10 @@ def create_dataloader(dataset, batch_size=8, shuffle=True, drop_last=True, num_w
 if __name__ == "__main__":
   
     # initialize tokenizer.
-    tokenizer = BPETokenizer("gpt2")
+    tokenizer = BPETokenizer("gpt2")                     
 
     # create dataset.
-    dataset = TextDataset(
+    dataset = GPTTextDataset(
         data_path="data/processed",
         tokenizer=tokenizer,
         context_length=256,
