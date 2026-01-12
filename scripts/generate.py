@@ -31,9 +31,6 @@ def generate_text(model, tokenizer, prompt, max_tokens=100, temperature=1.0, dev
             # update input tensor.
             input_tensor = torch.tensor([generated_ids]).to(device)
 
-            # stop if end token is generated.
-            if next_token == tokenizer.tok_to_int.get("<|endoftext|>"):
-                break
 
     # decode generated ids.
     generated_text = tokenizer.decode(generated_ids)
@@ -47,7 +44,6 @@ def main():
     parser = argparse.ArgumentParser(description="generate text with custom akin gpt-2 model trained on outliers' book")
 
     parser.add_argument("--checkpoint", type=str, required=True, help="path to model checkpoint")
-    parser.add_argument("--vocab_path", type=str, default="data/vocab/vocab.json", help="path to vocabulary")
     parser.add_argument("--prompt", type=str, default="who is the author of the outliers book?", help="prompt for generation")
     parser.add_argument("--max_tokens", type=int, default=100, help="maximum tokens to generate")
     parser.add_argument("--temperature", type=float, default=1.0, help="sampling temperature")
@@ -59,27 +55,19 @@ def main():
     device = torch.device(args.device)
     print(f"using device: {device}\n")
 
-    # load vocabulary.
-    from src.utils.helpers import load_vocab
-    vocab = load_vocab(args.vocab_path)
-
-    if vocab is None:
-        print("failed to load vocabulary")
-        return
+    
+    from src.tokenizers import BPETokenizer
+    from src.utils.config import GPT2_SMALL_124M
+    from src.models.gpt import GPTModel
 
     # initialize tokenizer.
-    from src.tokenizers import BPETokenizer
-    # tokenizer = WordTokenizer(vocab)
     tokenizer = BPETokenizer()
 
-    # load model (assuming GPT2Model exists).
-    from src.utils.config import GPT2_SMALL
-    # from src.models.gpt2 import GPT2Model
+    # load gpt-2 small configuration.
+    config = GPT2_SMALL_124M
 
-    config = GPT2_SMALL
-    config.vocab_size = len(vocab)
-
-    # model = GPT2Model(config).to(device)
+    # initialize model.
+    # model = GPTModel(config).to(device)
 
     # load checkpoint.
     checkpoint = torch.load(args.checkpoint, map_location=device)

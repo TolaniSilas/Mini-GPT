@@ -76,7 +76,6 @@ def main():
     parser = argparse.ArgumentParser(description="train gpt-2 model")
 
     parser.add_argument("--data_path", type=str, default="data/processed", help="path to processed data")
-    parser.add_argument("--vocab_path", type=str, default="data/vocab/vocab.json", help="path to vocabulary")
     parser.add_argument("--checkpoint_dir", type=str, default="checkpoints", help="directory to save checkpoints")
     parser.add_argument("--batch_size", type=int, default=8, help="batch size")
     parser.add_argument("--epochs", type=int, default=10, help="number of epochs")
@@ -92,27 +91,27 @@ def main():
     device = torch.device(args.device)
     print(f"using device: {device}\n")
 
-    # load vocabulary.
-    from src.utils.helpers import load_vocab
-    vocab = load_vocab(args.vocab_path)
 
-    if vocab is None:
-        print("failed to load vocabulary")
-        return
+    from src.tokenizers import BPETokenizer
+    from src.utils.config import GPT2_SMALL_124M
+    from src.models.gpt import GPTModel
+    from src.data.dataset import GPTTextDataset
+
+
+
+    # initialize tokenizer.
+    tokenizer = BPETokenizer()
+
+    # load gpt-2 small configuration.
+    config = GPT2_SMALL_124M
 
     # initialize model.
-    from src.utils.config import GPT2_SMALL
-    # from src.models.gpt2 import GPT2Model
-
-    config = GPT2_SMALL
-    config.vocab_size = len(vocab)
-
-    # model = GPT2Model(config).to(device)
+    # model = GPTModel(config).to(device)
     # print(f"model parameters: {count_parameters(model):,}\n")
 
-    # create dataloaders (assuming dataset class exists).
-    # from src.data.dataset import TextDataset
-    # train_dataset = TextDataset(args.data_path, vocab)
+
+    # create dataloaders.
+    train_dataset = GPTTextDataset(args.data_path, tokenizer)
     # train_loader = DataLoader(train_dataset, batch_size=args.batch_size, shuffle=True)
 
     # initialize optimizer and loss.

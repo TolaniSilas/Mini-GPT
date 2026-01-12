@@ -2,7 +2,6 @@ import torch
 from torch import nn
 
 
-
 class FeedForward(nn.Module):
     """position-wise feed-forward network in transformer. the second sub-layer in each transformer block."""
 
