@@ -73,17 +73,21 @@ def batch_pdf_to_text(folder_path, output_folder=None):
 
     print(f"found {len(pdf_files)} pdf files. converting...")
 
+    combined_texts = []
+
     # process each pdf.
     for pdf_file in pdf_files:
         pdf_path = os.path.join(folder_path, pdf_file)
 
         if output_folder:
             output_path = os.path.join(output_folder, pdf_file.replace('.pdf', '.txt'))
-
         else:
             output_path = None
 
         print(f"\nprocessing: {pdf_file}")
-        pdf_to_text(pdf_path, output_path)
+
+        combined_texts.append(pdf_to_text(pdf_path, output_path))
 
     print("\nbatch conversion complete!")
+
+    return combined_texts
