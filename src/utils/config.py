@@ -6,7 +6,7 @@ class GPT2Config:
         self,
         vocab_size=50257,   # the model's vocabulary size.
         context_length=1024,  # the model's context length.
-        emb_dim=768,    # the embedding function.
+        embed_dim=768,    # the embedding function.
         n_heads=12,    # the number of attention heads.
         n_layers=12,   # the number of transformer layers.
         drop_rate=0.2,  # the probability of drop out rate.
@@ -16,11 +16,20 @@ class GPT2Config:
 
         self.vocab_size = vocab_size
         self.context_length = context_length
-        self.emb_dim = emb_dim
+        self.embed_dim = embed_dim
         self.n_heads = n_heads
         self.n_layers = n_layers
         self.drop_rate = drop_rate
         self.qkv_bias = qkv_bias
+
+    # add these methods to make it work like a dictionary.
+    def __getitem__(self, key):
+        """allows dictionary-style access."""
+        return getattr(self, key)
+    
+    def __setitem__(self, key, value):
+        """allows dictionary-style setting."""
+        setattr(self, key, value)
                  
 
 
@@ -28,40 +37,40 @@ class GPT2Config:
 GPT2_SMALL_124M = GPT2Config(
     vocab_size=50257,
     context_length=256, 
-    emb_dim=256,  # real gpt2 used 768 but i reduced it here because of computational limitations.
+    embed_dim=256,  # real gpt2 used 768 but i reduced it here because of computational limitations.
     n_heads=12,
     n_layers=12,
-    drop_rate=0.1,
+    drop_rate=0.2,
     qkv_bias=False
 )
 
 GPT2_MEDIUM = GPT2Config(
     vocab_size=50257,
     context_length=1024,
-    emb_dim=1024,
+    embed_dim=1024,
     n_heads=16,
     n_layers=24,
-    drop_rate=0.1,
+    drop_rate=0.2,
     qkv_bias=False
 )
 
 GPT2_LARGE = GPT2Config(
     vocab_size=50257,
     context_length=1024,
-    emb_dim=1280,
+    embed_dim=1280,
     n_heads=20,
     n_layers=36,
-    drop_rate=0.1,
+    drop_rate=0.2,
     qkv_bias=False
 )
 
 GPT3 = GPT2Config(
     vocab_size=50257,
     context_length=2048,
-    emb_dim=12288,
+    embed_dim=12288,
     n_heads=96,
     n_layers=96,
-    drop_rate=0.1,
+    drop_rate=0.2,
     qkv_bias=False
 )
 

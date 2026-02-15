@@ -6,7 +6,7 @@ sys.path.insert(0, str(Path(__file__).parent.parent))
 
 import os
 import argparse
-from src.data import pdf_to_text, batch_pdf_to_text
+from src.data import batch_pdf_to_text
 
 
 
@@ -18,6 +18,7 @@ def main():
     parser.add_argument("--raw_dir", type=str, default="data/raw", help="directory with raw pdfs")
     parser.add_argument("--output_dir", type=str, default="data/processed", help="output directory for processed text")
 
+    # parse command line arguments.
     args = parser.parse_args()
 
     # create output directories.

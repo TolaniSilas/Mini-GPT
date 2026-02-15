@@ -7,11 +7,18 @@ sys.path.insert(0, str(Path(__file__).parent.parent))
 import os
 import torch
 import torch.nn as nn
-from torch.utils.data import DataLoader, random_split
+from torch.utils.data import random_split
 import argparse
 from pathlib import Path
 from helpers_functions import calculate_loss_batch, evaluate_model, generate_and_print_sample
 import time
+
+# import project modules.
+from src.tokenizers import BPETokenizer
+from src.utils.config import GPT2_SMALL_124M
+from src.models.gpt import GPTModel
+from src.data.dataset import GPTTextDataset, create_dataloader
+from src.utils.helpers import save_checkpoint
 
 
 def train_model(model, train_loader, val_loader, optimizer, device, num_epochs, eval_freq, eval_iter, starting_prompt, tokenizer):
@@ -63,6 +70,7 @@ def train_model(model, train_loader, val_loader, optimizer, device, num_epochs, 
     return train_losses, val_losses, track_tokens_seen
 
 
+
 def main():
     """main training loop."""
 
@@ -72,19 +80,14 @@ def main():
     parser.add_argument("--data_path", type=str, default="data/processed", help="path to processed data")
     parser.add_argument("--checkpoint_dir", type=str, default="results/checkpoints", help="directory to save checkpoints")
     parser.add_argument("--batch_size", type=int, default=8, help="batch size")
-    parser.add_argument("--epochs", type=int, default=5, help="number of epochs")
+    parser.add_argument("--epochs", type=int, default=1, help="number of epochs")  # you can set your desired number of epochs here. 
     parser.add_argument("--lr", type=float, default=0.0004, help="learning rate")
     parser.add_argument("--weight_decay", type=float, default=0.1, help="weight decay")
     parser.add_argument("--device", type=str, default="cuda" if torch.cuda.is_available() else "cpu", help="device")
 
-    args = parser.parse_args()
 
-    # import project modules.
-    from src.tokenizers import BPETokenizer
-    from src.utils.config import GPT2_SMALL_124M
-    from src.models.gpt import GPTModel
-    from src.data.dataset import GPTTextDataset, create_dataloader
-    from src.utils.helpers import save_checkpoint
+    # parse command line arguments.
+    args = parser.parse_args()
 
     # create checkpoint directory.
     os.makedirs(args.checkpoint_dir, exist_ok=True)
@@ -113,6 +116,7 @@ def main():
 
     # load gpt-2 small configuration.
     config = GPT2_SMALL_124M
+
 
     # initialize model and move to device.
     model = GPTModel(config).to(device)
@@ -196,16 +200,16 @@ def main():
         tokenizer=tokenizer
     )
 
-    # calculate and display training duration.
-    end_time = time.time()
-    execution_time_minutes = (end_time - start_time) / 60
-    print(f"training completed in {execution_time_minutes:.2f} minutes.")
+    # # calculate and display training duration.
+    # end_time = time.time()
+    # execution_time_minutes = (end_time - start_time) / 60
+    # print(f"training completed in {execution_time_minutes:.2f} minutes.")
 
-    # save final checkpoint.
-    checkpoint_path = f"{args.checkpoint_dir}/checkpoint_epoch_{args.epochs}.pt"
+    # # save final checkpoint.
+    # checkpoint_path = f"{args.checkpoint_dir}/checkpoint_epoch_{args.epochs}.pt"
 
-    # save model checkpoint to disk.
-    save_checkpoint(model, optimizer, args.epochs, train_losses[-1], checkpoint_path)
+    # # save model checkpoint to disk.
+    # save_checkpoint(model, optimizer, args.epochs, train_losses[-1], checkpoint_path)
 
 
 if __name__ == "__main__":

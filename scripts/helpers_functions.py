@@ -40,7 +40,7 @@ def calculate_loss_loader(data_loader, model, device, num_batches=None):
             # calculate loss for current batch.
             loss = calculate_loss_batch(input_batch, target_batch, model, device)
             total_loss += loss.item()
-            if i == 0:
+            if i == 2:
                 break
         else:
             break
