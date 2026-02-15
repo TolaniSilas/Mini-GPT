@@ -16,7 +16,7 @@ class TransformerDecoderBlock(nn.Module):
             d_in=config["embed_dim"],
             d_out=config["embed_dim"],
             context_length=config["context_length"],
-            num_heads=config["num_heads"],
+            num_heads=config["n_heads"],
             dropout=config["drop_rate"],
             qkv_bias=config["qkv_bias"]
         )
