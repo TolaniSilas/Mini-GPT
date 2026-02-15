@@ -91,3 +91,6 @@ def batch_pdf_to_text(folder_path, output_folder=None):
     print("\nbatch conversion complete!")
 
     return combined_texts
+
+
+# raw_text_contents = batch_pdf_to_text(pdf_path)

@@ -1,0 +1,11 @@
+[project]
+name = "mini-gpt"
+version = "0.1.0"
+description = "educational gpt-2 implementation from scratch"
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = [
+    "matplotlib>=3.7.0",
+    "pypdf>=3.0.0",
+    "tiktoken>=0.5.0",
+]

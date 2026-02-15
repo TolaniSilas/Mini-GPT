@@ -1,12 +1,8 @@
-from utils.config import GPT2Config
-from utils.config import GPT2_SMALL_124M 
+# from utils.config import GPT2Config
+# from utils.config import GPT2_SMALL_124M 
 import torch
 from torch import nn
 from .transformer_block import TransformerDecoderBlock
-
-
-config = GPT2_SMALL_124M
-
 
 
 class GPTModel(nn.Module):

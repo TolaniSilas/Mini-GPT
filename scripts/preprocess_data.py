@@ -1,7 +1,11 @@
-import os
-import re
-import argparse
+import sys
 from pathlib import Path
+
+# add project root to python path.
+sys.path.insert(0, str(Path(__file__).parent.parent))
+
+import os
+import argparse
 from src.data import pdf_to_text, batch_pdf_to_text
 
 
@@ -40,4 +44,6 @@ def main():
 
 
 if __name__ == "__main__":
+
+    # run the main preprocessing pipeline.
     main()
