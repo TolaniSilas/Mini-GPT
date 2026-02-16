@@ -1,6 +1,7 @@
 import torch
 
 
+
 def calculate_loss_batch(input_batch, target_batch, model, device):
     """calculates loss for a single batch."""
 
@@ -17,9 +18,11 @@ def calculate_loss_batch(input_batch, target_batch, model, device):
     return loss
 
 
+
 def calculate_loss_loader(data_loader, model, device, num_batches=None):
     """calculates average loss across multiple batches from data loader."""
 
+    # initialize total loss.
     total_loss = 0.0
 
     # handle empty data loader.
@@ -29,6 +32,7 @@ def calculate_loss_loader(data_loader, model, device, num_batches=None):
     # determine number of batches to process.
     if num_batches is None:
         num_batches = len(data_loader)
+        
     else:
         # limit to available batches.
         num_batches = min(num_batches, len(data_loader))
@@ -40,8 +44,7 @@ def calculate_loss_loader(data_loader, model, device, num_batches=None):
             # calculate loss for current batch.
             loss = calculate_loss_batch(input_batch, target_batch, model, device)
             total_loss += loss.item()
-            if i == 2:
-                break
+
         else:
             break
 
@@ -69,6 +72,7 @@ def evaluate_model(model, train_loader, val_loader, device, eval_iter):
     model.train()
 
     return train_loss, val_loss
+
 
 
 def generate_text_simple(model, idx, max_new_tokens, context_size):
@@ -99,6 +103,7 @@ def generate_text_simple(model, idx, max_new_tokens, context_size):
     return idx
 
 
+
 def text_to_token_ids(text, tokenizer):
     """converts text to token ids with batch dimension."""
 
@@ -111,6 +116,7 @@ def text_to_token_ids(text, tokenizer):
     return encoded_tensor
 
 
+
 def token_ids_to_text(token_ids, tokenizer):
     """converts token ids back to text."""
 
@@ -121,21 +127,33 @@ def token_ids_to_text(token_ids, tokenizer):
     return tokenizer.decode(flat.tolist())
 
 
-def generate_and_print_sample(model, tokenizer, device, start_context):
 
+def generate_and_print_sample(model, tokenizer, device, start_context):
+    """generates and prints sample text from the model."""
+
+    # set model to evaluation mode.
     model.eval()
 
+    # get context size from positional embeddings.
     context_size = model.pos_emb.weight.shape[0]
 
+    # encode starting context and move to device.
     encoded = text_to_token_ids(start_context, tokenizer).to(device)
 
+    # generate text without gradient tracking.
     with torch.no_grad():
-        token_ids = generate_text_simple(model=model, idx=encoded, max_new_tokens=50, context_size=context_size)
+        token_ids = generate_text_simple(
+            model=model,
+            idx=encoded,
+            max_new_tokens=50,
+            context_size=context_size
+        )
 
+    # decode token ids back to text.
     decoded_text = token_ids_to_text(token_ids, tokenizer)
 
-    print(decoded_text.replace("\n", " "))  
+    # print generated text with newlines replaced by spaces.
+    print(decoded_text.replace("\n", " "))
 
+    # set model back to training mode.
     model.train()
-
-

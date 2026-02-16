@@ -80,7 +80,7 @@ def main():
     parser.add_argument("--data_path", type=str, default="data/processed", help="path to processed data")
     parser.add_argument("--checkpoint_dir", type=str, default="results/checkpoints", help="directory to save checkpoints")
     parser.add_argument("--batch_size", type=int, default=8, help="batch size")
-    parser.add_argument("--epochs", type=int, default=1, help="number of epochs")  # you can set your desired number of epochs here. 
+    parser.add_argument("--epochs", type=int, default=15, help="number of epochs")  # you can set your desired number of epochs here. 
     parser.add_argument("--lr", type=float, default=0.0004, help="learning rate")
     parser.add_argument("--weight_decay", type=float, default=0.1, help="weight decay")
     parser.add_argument("--device", type=str, default="cuda" if torch.cuda.is_available() else "cpu", help="device")
@@ -200,16 +200,18 @@ def main():
         tokenizer=tokenizer
     )
 
-    # # calculate and display training duration.
-    # end_time = time.time()
-    # execution_time_minutes = (end_time - start_time) / 60
-    # print(f"training completed in {execution_time_minutes:.2f} minutes.")
+    # end timer for training duration.
+    end_time = time.time()
 
-    # # save final checkpoint.
-    # checkpoint_path = f"{args.checkpoint_dir}/checkpoint_epoch_{args.epochs}.pt"
+    # calculate and display training duration.
+    execution_time_minutes = (end_time - start_time) / 60
+    print(f"training completed in {execution_time_minutes:.2f} minutes.")
 
-    # # save model checkpoint to disk.
-    # save_checkpoint(model, optimizer, args.epochs, train_losses[-1], checkpoint_path)
+    # save final checkpoint.
+    checkpoint_path = f"{args.checkpoint_dir}/checkpoint_epoch_{args.epochs}.pt"
+
+    # save model checkpoint to disk.
+    save_checkpoint(model, optimizer, args.epochs, train_losses[-1], checkpoint_path)
 
 
 if __name__ == "__main__":
