@@ -37,7 +37,7 @@ class GPT2Config:
 GPT2_SMALL_124M = GPT2Config(
     vocab_size=50257,
     context_length=256, 
-    embed_dim=252,  # real gpt2 used 768 but i reduced it here because of computational limitations.
+    embed_dim=768,
     n_heads=12,
     num_layers=12,
     drop_rate=0.2,

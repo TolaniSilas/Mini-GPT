@@ -11,6 +11,7 @@ class WordTokenizer:
         self.int_to_tok = {integer: token for token, integer in vocab.items()}
         self.pattern = r'([,.:;?_!"()\'\[\]{}\/\\|—–-]+|\.\.\.|\s+)'
 
+
     def encode(self, text):
         """converts text to list of token ids."""
 

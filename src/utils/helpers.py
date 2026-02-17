@@ -51,3 +51,14 @@ def load_checkpoint(model, optimizer, filepath):
     print(f"checkpoint loaded: {filepath}")
 
     return epoch, loss
+
+
+def save_model(model, filepath):
+    """saves final trained model to disk."""
+
+    # create directory if it doesn't exist.
+    os.makedirs(os.path.dirname(filepath), exist_ok=True)
+
+    # save only model state dict.
+    torch.save(model.state_dict(), filepath)
+    print(f"model saved: {filepath}")

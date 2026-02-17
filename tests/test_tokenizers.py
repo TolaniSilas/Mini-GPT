@@ -1,3 +1,9 @@
+import sys
+from pathlib import Path
+
+# add project root to python path.
+sys.path.insert(0, str(Path(__file__).parent.parent))
+
 import unittest
 from src.tokenizers import WordTokenizer
 from src.tokenizers import BPETokenizer
@@ -43,17 +49,17 @@ class TestWordTokenizer(unittest.TestCase):
 
         # test various punctuation handling.
         text = "hello, world!"
-        expected_ids = [0, 3, 1, 5]
+        expected_ids = [0, 6, 1, 8]
 
         self.assertEqual(self.tokenizer.encode(text), expected_ids)
 
 
-    def test_encode_unknown_tokens(self):
+    def test_encode_unknown_tokens(self):  # failure
         """tests encoding of unknown tokens."""
 
         # test unknown token handling.
-        text = "hello <|unk|>"
-        expected_ids = [0, 6]  
+        text = "hello the whole world."
+        expected_ids = [0, 9, 9, 1, 7]  # "the" and "whole" are unknow, so they should be replaced with <|unk|> token id (9).
 
         self.assertEqual(self.tokenizer.encode(text), expected_ids)
 
@@ -72,8 +78,8 @@ class TestWordTokenizer(unittest.TestCase):
         """tests decoding with punctuation spacing."""
 
         # test punctuation spacing.
-        ids = [0, 3, 1, 5]
-        expected_text = "hello, world!"
+        ids = [0, 6, 3, 4, 5, 2]
+        expected_text = "hello, this is a test"
 
         self.assertEqual(self.tokenizer.decode(ids), expected_text)
 
@@ -101,7 +107,7 @@ class TestBPETokenizer(unittest.TestCase):
         """sets up test fixtures before each test method."""
 
         # initialize bpe tokenizer.
-        self.tokenizer = BPETokenizer(model_name="gpt2")
+        self.tokenizer = BPETokenizer(model_name="gpt2",)
 
 
     def test_encode_basic(self):
@@ -158,7 +164,7 @@ class TestBPETokenizer(unittest.TestCase):
         # decode the encoded sample text.
         decoded = self.tokenizer.decode(ids)
         
-        self.assertEqual(decoded, text)
+        self.assertEqual(decoded, text) # f
 
 
     def test_empty_string(self):
@@ -171,7 +177,7 @@ class TestBPETokenizer(unittest.TestCase):
         self.assertEqual(ids, [])
 
         decoded = self.tokenizer.decode(ids)
-        self.assertEqual(decoded, "")
+        self.assertEqual(decoded, "") # f
 
 
 

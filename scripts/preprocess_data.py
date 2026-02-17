@@ -13,6 +13,7 @@ from src.data import batch_pdf_to_text
 def main():
     """main preprocessing pipeline."""
 
+    # parse command line arguments.
     parser = argparse.ArgumentParser(description="preprocess pdf data for gpt-2 training.")
 
     parser.add_argument("--raw_dir", type=str, default="data/raw", help="directory with raw pdfs")
