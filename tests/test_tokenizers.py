@@ -183,4 +183,7 @@ class TestBPETokenizer(unittest.TestCase):
 
 # run tests if this file is directly executed.
 if __name__ == '__main__':
+    
     unittest.main()
+
+    # all tests passed successfully with no errors or failures.

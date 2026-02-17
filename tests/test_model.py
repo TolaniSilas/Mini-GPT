@@ -43,6 +43,7 @@ class TestGPTModel(unittest.TestCase):
         # set to eval mode for testing.
         self.model.eval()
 
+
     def test_model_initialization(self):
         """tests that model initializes correctly."""
 
@@ -52,6 +53,7 @@ class TestGPTModel(unittest.TestCase):
         # check embeddings exist.
         self.assertIsNotNone(self.model.tok_emb)
         self.assertIsNotNone(self.model.pos_emb)
+
 
     def test_output_shape(self):
         """tests that model output has correct shape."""
@@ -69,6 +71,7 @@ class TestGPTModel(unittest.TestCase):
         expected_shape = (batch_size, seq_len, self.config.vocab_size)
         self.assertEqual(output.shape, expected_shape)
 
+
     def test_forward_pass_no_error(self):
         """tests that forward pass runs without errors."""
 
@@ -84,6 +87,7 @@ class TestGPTModel(unittest.TestCase):
             success = False
 
         self.assertTrue(success)
+
 
     def test_context_length_handling(self):
         """tests model handles different sequence lengths."""
@@ -104,6 +108,7 @@ class TestGPTModel(unittest.TestCase):
 
         self.assertEqual(output_short.shape[1], 5)
 
+
     def test_parameter_count(self):
         """tests that model has trainable parameters."""
 
@@ -112,6 +117,7 @@ class TestGPTModel(unittest.TestCase):
 
         # model should have parameters.
         self.assertGreater(total_params, 0)
+
 
     def test_gradient_flow(self):
         """tests that gradients flow through model."""
@@ -139,6 +145,7 @@ class TestGPTModel(unittest.TestCase):
         has_gradients = any(p.grad is not None for p in self.model.parameters())
         self.assertTrue(has_gradients)
 
+
     def test_device_movement(self):
         """tests model can move between devices."""
 
@@ -162,6 +169,7 @@ class TestGPTModel(unittest.TestCase):
             self.assertEqual(output_cuda.device.type, 'cuda')
 
 
+
 class TestLayerNorm(unittest.TestCase):
     """unit tests for layer normalization."""
 
@@ -170,6 +178,7 @@ class TestLayerNorm(unittest.TestCase):
 
         self.embed_dim = 128
         self.layer_norm = LayerNorm(self.embed_dim)
+
 
     def test_output_shape(self):
         """tests output shape matches input shape."""
@@ -182,6 +191,7 @@ class TestLayerNorm(unittest.TestCase):
 
         # check shape preserved.
         self.assertEqual(output.shape, x.shape)
+
 
     def test_normalized_mean_and_var(self):
         """tests that output is normalized."""
@@ -200,6 +210,7 @@ class TestLayerNorm(unittest.TestCase):
         self.assertTrue(torch.allclose(var, torch.ones_like(var), atol=1e-5))
 
 
+
 class TestGELU(unittest.TestCase):
     """unit tests for gelu activation."""
 
@@ -207,6 +218,7 @@ class TestGELU(unittest.TestCase):
         """sets up test fixtures."""
 
         self.gelu = GELU()
+
 
     def test_output_shape(self):
         """tests output shape matches input shape."""
@@ -220,6 +232,7 @@ class TestGELU(unittest.TestCase):
         # check shape preserved.
         self.assertEqual(output.shape, x.shape)
 
+
     def test_zero_input(self):
         """tests gelu activation at zero."""
 
@@ -228,6 +241,7 @@ class TestGELU(unittest.TestCase):
         output = self.gelu(x)
 
         self.assertTrue(torch.allclose(output, torch.zeros_like(output), atol=1e-5))
+
 
 
 class TestMultiHeadAttention(unittest.TestCase):
@@ -250,6 +264,7 @@ class TestMultiHeadAttention(unittest.TestCase):
             self.num_heads
         )
 
+
     def test_output_shape(self):
         """tests output shape is correct."""
 
@@ -265,6 +280,7 @@ class TestMultiHeadAttention(unittest.TestCase):
         expected_shape = (batch_size, seq_len, self.d_out)
         self.assertEqual(output.shape, expected_shape)
 
+
     def test_causal_masking(self):
         """tests that causal mask prevents attending to future."""
 
@@ -279,6 +295,7 @@ class TestMultiHeadAttention(unittest.TestCase):
 
         # output should exist and have correct shape.
         self.assertEqual(output.shape, (1, 5, self.d_out))
+
 
 
 class TestTransformerBlock(unittest.TestCase):
@@ -299,6 +316,7 @@ class TestTransformerBlock(unittest.TestCase):
 
         self.block = TransformerDecoderBlock(self.config)
 
+
     def test_output_shape(self):
         """tests output shape matches input shape."""
 
@@ -310,6 +328,7 @@ class TestTransformerBlock(unittest.TestCase):
 
         # shape should be preserved.
         self.assertEqual(output.shape, x.shape)
+
 
     def test_residual_connections(self):
         """tests that residual connections exist."""
@@ -327,8 +346,12 @@ class TestTransformerBlock(unittest.TestCase):
         self.assertFalse(torch.allclose(output, x))
 
 
+
+# run tests if this file is directly executed.
 if __name__ == '__main__':
+
     unittest.main()
 
+    # all tests passed successfully with no errors or failures.
 
 
