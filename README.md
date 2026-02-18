@@ -125,6 +125,29 @@ python3 scripts/generate.py --checkpoint_path results/checkpoints/checkpoint_epo
 
 ---
 
+## Testing
+
+Run all tests to verify the implementation:
+```bash
+# run all tests.
+python3 -m unittest discover tests/
+
+# run model tests only.
+python3 -m unittest tests/test_model.py -v
+
+# run tokenizer tests only.
+python3 -m unittest tests/test_tokenizers.py -v
+```
+
+**Test Coverage:**
+- `test_model.py` - tests for model architecture, forward pass, gradient flow, layers, transformet block, multi-head attention mechanism, and the whole GPT-style arichtecture.
+- `test_tokenizers.py` - tests for word-level and BPE tokenization
+
+
+
+---
+
+
 
 ## Project Structure
 ```
