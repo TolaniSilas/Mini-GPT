@@ -258,8 +258,3 @@ This project is licensed under the terms specified in the **LICENSE** file. Chec
 **Course:** ECE 518: Neural Networks
 
 **Training Data:** *Outliers* by Malcolm Gladwell (utilized solely for experimentation).
-
-
-
-
-# python3 tests/test_tokenizers.py

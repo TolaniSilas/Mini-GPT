@@ -22,7 +22,7 @@ class GPT2Config:
         self.drop_rate = drop_rate
         self.qkv_bias = qkv_bias
 
-    # add these methods to make it work like a dictionary.
+    # added these methods to make it work or function like a dictionary.
     def __getitem__(self, key):
         """allows dictionary-style access."""
         return getattr(self, key)
