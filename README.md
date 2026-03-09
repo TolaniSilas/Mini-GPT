@@ -235,9 +235,9 @@ drop_rate: 0.2
 
 ---
 
-## License
+## License 
 
-This project is licensed under the terms specified in the **LICENSE** file. Check the file for complete details.
+This project is licensed under the terms specified in the [LICENSE](LICENSE) file. Check the file for complete details.
 
 ---
 
